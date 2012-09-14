@@ -1,17 +1,16 @@
 package com.theladders.bankkata.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.theladders.bankkata.exception.InsufficientFundsException;
 import com.theladders.bankkata.model.transaction.Deposit;
-import com.theladders.bankkata.model.transaction.TransactionVisitor;
 import com.theladders.bankkata.model.transaction.Transactions;
 import com.theladders.bankkata.model.transaction.Withdrawal;
+import com.theladders.bankkata.print.TransactionPrinter;
 
 public class Account
 {
-  private Amount       balance      = new Amount(BigDecimal.ZERO);
+  private Amount       balance      = new Amount("0");
   private Transactions transactions = new Transactions();
 
 
@@ -60,8 +59,8 @@ public class Account
   }
 
 
-  public void visitTransactions(TransactionVisitor visitor)
+  public void printStatementUsing(TransactionPrinter printer)
   {
-    transactions.accept(visitor);
+    transactions.accept(printer);
   }
 }

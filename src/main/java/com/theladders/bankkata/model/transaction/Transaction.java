@@ -22,7 +22,7 @@ public abstract class Transaction
   abstract void accept(TransactionVisitor visitor);
 
 
-  abstract public void applyTo(@SuppressWarnings("hiding") Amount amount);
+  abstract public void applyTo(Amount amount);
 
 
   @Override

@@ -1,9 +1,7 @@
 package com.theladders.bankkata;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -66,31 +64,17 @@ public class BankKataTest
 
 
   @Test
-  public void bankShouldAcceptWithdrawalsForDifferentCustomers()
+  public void bankShouldAcceptWithdrawalsForDifferentCustomers() throws InsufficientFundsException
   {
     Account account = new Account();
     account.deposit(new Amount("100.23"));
-    try
-    {
-      account.withdraw(new Amount("100.23"));
-    }
-    catch (InsufficientFundsException e)
-    {
-      fail("insufficient funds");
-    }
+    account.withdraw(new Amount("100.23"));
 
-    assertTrue(account.balanceEquals(new Amount(BigDecimal.ZERO)));
+    assertTrue(account.balanceEquals(new Amount("0")));
 
     Account otherAccount = new Account();
     otherAccount.deposit(new Amount("30.23"));
-    try
-    {
-      otherAccount.withdraw(new Amount("1"));
-    }
-    catch (InsufficientFundsException e)
-    {
-      fail("insufficient funds");
-    }
+    otherAccount.withdraw(new Amount("1"));
 
     assertTrue(otherAccount.balanceEquals(new Amount("29.23")));
   }
@@ -106,23 +90,16 @@ public class BankKataTest
 
 
   @Test
-  public void bankShouldAllowTransfersBetweenCustomers()
+  public void bankShouldAllowTransfersBetweenCustomers() throws InsufficientFundsException
   {
     Account account = new Account();
     account.deposit(new Amount("100.23"));
 
     Account otherAccount = new Account();
 
-    try
-    {
-      account.transferTo(otherAccount, new Amount("100.23"));
-    }
-    catch (InsufficientFundsException e)
-    {
-      fail("insufficient funds");
-    }
+    account.transferTo(otherAccount, new Amount("100.23"));
 
-    assertTrue(account.balanceEquals(new Amount(BigDecimal.ZERO)));
+    assertTrue(account.balanceEquals(new Amount("0")));
     assertTrue(otherAccount.balanceEquals(new Amount("100.23")));
   }
 
@@ -148,7 +125,7 @@ public class BankKataTest
     account.deposit(new Amount("54.01"));
 
     TransactionPrinter printer = new AllTransactionsPrinter();
-    account.visitTransactions(printer);
+    account.printStatementUsing(printer);
 
     assertTrue(printer.hasPrinted("100.23"));
     assertTrue(printer.hasPrinted("60"));
@@ -167,7 +144,7 @@ public class BankKataTest
     account.deposit(new Amount("54.01"));
 
     TransactionPrinter printer = new DepositsPrinter();
-    account.visitTransactions(printer);
+    account.printStatementUsing(printer);
 
     assertTrue(printer.hasPrinted("100.23"));
     assertTrue(printer.hasNotPrinted("60"));
@@ -184,7 +161,7 @@ public class BankKataTest
     account.deposit(new Amount("54.01"));
 
     TransactionPrinter printer = new WithdrawalsPrinter();
-    account.visitTransactions(printer);
+    account.printStatementUsing(printer);
 
     assertTrue(printer.hasNotPrinted("100.23"));
     assertTrue(printer.hasPrinted("60"));
@@ -197,20 +174,18 @@ public class BankKataTest
   {
     Date then = new GregorianCalendar(2000, 4, 18).getTime();
     Date now = new Date();
-    Date later = new GregorianCalendar(3000, 6, 4).getTime();
 
     Account account = new Account();
     account.deposit(new Amount("100.23"), then);
     account.withdraw(new Amount("60"), now);
 
     TransactionPrinter printer = new TransactionTimesPrinter();
-    account.visitTransactions(printer);
+    account.printStatementUsing(printer);
 
     assertTrue(printer.hasNotPrinted("100.23"));
     assertTrue(printer.hasNotPrinted("60"));
 
     assertTrue(printer.hasPrinted(DateUtil.formatDate(then)));
     assertTrue(printer.hasPrinted(DateUtil.formatDate(now)));
-    assertTrue(printer.hasNotPrinted(DateUtil.formatDate(later)));
   }
 }

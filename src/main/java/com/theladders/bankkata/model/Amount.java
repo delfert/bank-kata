@@ -9,18 +9,12 @@ public class Amount
 
   public Amount(String value)
   {
-    this(new BigDecimal(value));
+    this.value = new BigDecimal(value);
+    validate();
   }
 
 
-  public Amount(BigDecimal value)
-  {
-    this.value = value;
-    validateValue();
-  }
-
-
-  private void validateValue()
+  private void validate()
   {
     if (this.value.compareTo(BigDecimal.ZERO) < 0)
     {

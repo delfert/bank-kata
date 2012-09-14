@@ -21,7 +21,7 @@ public class Deposit extends Transaction
 
 
   @Override
-  public void applyTo(@SuppressWarnings("hiding") Amount amount)
+  public void applyTo(Amount amount)
   {
     amount.add(this.amount);
   }

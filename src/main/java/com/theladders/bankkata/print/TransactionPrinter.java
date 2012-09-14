@@ -1,7 +1,5 @@
 package com.theladders.bankkata.print;
 
-import java.math.BigDecimal;
-
 import com.theladders.bankkata.model.Amount;
 import com.theladders.bankkata.model.transaction.Deposit;
 import com.theladders.bankkata.model.transaction.TransactionVisitor;
@@ -9,11 +7,10 @@ import com.theladders.bankkata.model.transaction.Withdrawal;
 
 public abstract class TransactionPrinter implements TransactionVisitor
 {
-  protected Amount       balance      = new Amount(BigDecimal.ZERO);
+  protected Amount       balance      = new Amount("0");
   protected PrintHistory printHistory = new PrintHistory();
 
 
-  @Override
   public void visit(Deposit deposit)
   {
     deposit.applyTo(balance);
@@ -22,7 +19,6 @@ public abstract class TransactionPrinter implements TransactionVisitor
   }
 
 
-  @Override
   public void visit(Withdrawal withdrawal)
   {
     withdrawal.applyTo(balance);
